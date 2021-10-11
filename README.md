@@ -13,4 +13,4 @@ This repo has only been tested on Ubuntu for wsl2 using an Nvidia GPU and AMD CP
 
 ## Usage
 Execute this in your Ubuntu shell with sudo permissions:
-	git clone https://github.com/TheEpiCreator/deepracer-setup-for-wsl2 && sudo sh ./deepracer-setup-for-wsl2/setup.sh
+	`git clone https://github.com/TheEpiCreator/deepracer-setup-for-wsl2 && sudo sh ./deepracer-setup-for-wsl2/setup.sh`
