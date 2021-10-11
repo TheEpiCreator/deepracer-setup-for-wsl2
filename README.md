@@ -1,4 +1,3 @@
-
 # Details
 This repository contains a Linux shell file for easily installing deepracer-for-cloud on Windows Subsystem for Linux 2 (wsl2).
 
