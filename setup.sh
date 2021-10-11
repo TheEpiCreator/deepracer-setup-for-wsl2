@@ -1,8 +1,15 @@
 # Commands compiled by EPCR
+
 # Some of the commands used can be found at:
 #>https://docs.nvidia.com/cuda/wsl-user-guide/index.html#installing-nvidia-drivers
 #>https://aws-deepracer-community.github.io/deepracer-for-cloud/windows.html
 #>https://aws-deepracer-community.github.io/deepracer-for-cloud/installation.html
+#>https://blog.gofynd.com/how-we-broke-into-the-top-1-of-the-aws-deepracer-virtual-circuit-c39a241979f5
+
+
+# info
+printf "This may take a while..."
+sleep 5s
 
 # install appropriate nvidia toolkit(s)
 sudo apt-get update
@@ -25,10 +32,19 @@ sudo apt-get install -y nvidia-docker2
 sudo service docker stop
 sudo service docker start
 
+# install and configure prerequisites for aws-deepracer-community
 sudo apt-get install jq awscli python3-boto3 docker-compose
+
 cat /etc/docker/daemon.json | jq 'del(."default-runtime") + {"default-runtime": "nvidia"}' | sudo tee /etc/docker/daemon.json
 sudo usermod -a -G docker $(id -un)
+
+# install and configure aws-deepracer-community
 git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git
+
 cd deepracer-for-cloud
 sudo bin/init.sh -a gpu -c local
 sudo sed -i 's/^{/{\n\t"default-runtime": "nvidia",/' /etc/docker/daemon.json
+
+
+# inform user about completion
+printf "\nSetup is done!"
