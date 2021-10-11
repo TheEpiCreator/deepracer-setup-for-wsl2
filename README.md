@@ -4,7 +4,7 @@ This repository contains a Linux shell file for easily installing deepracer-for-
 ### Disclaimer
 This repository is a personal project. It is not guaranteed to work and is not meant to be used in a production environment.
 
-This repo has only been tested on Ubuntu for wsl2 using an Nvidia GPU and AMD CPU.
+This repo has only been tested on a clean installation of Ubuntu 20.04 LTS for wsl2 using an Nvidia GPU and AMD CPU.
 
 ### Prerequisites
 - Nvidia drivers compatible with wsl2
@@ -13,4 +13,4 @@ This repo has only been tested on Ubuntu for wsl2 using an Nvidia GPU and AMD CP
 
 ## Usage
 Execute this in your Ubuntu shell with sudo permissions:
-	`git clone https://github.com/TheEpiCreator/deepracer-setup-for-wsl2 && sudo sh ./deepracer-setup-for-wsl2/setup.sh`
+`git clone https://github.com/TheEpiCreator/deepracer-setup-for-wsl2 && sudo sh ./deepracer-setup-for-wsl2/setup.sh`
