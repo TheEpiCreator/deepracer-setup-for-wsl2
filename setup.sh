@@ -8,13 +8,13 @@
 
 
 # define utility variables
-NOCOL='\033[0m'
+NC='\033[0m'
 RED='\033[0;31m'
 GREEN='\033[1;32m'
 
 
 # info
-echo -e "${GREEN}You may have to enter some data during configuration.\nThis may take a while..."
+echo -e "${GREEN}You may have to enter some data during configuration.\nThis may take a while...${NC}"
 sleep 3s
 
 # install appropriate nvidia toolkit(s)
@@ -28,7 +28,7 @@ sudo apt-get update
 sudo apt-get -y install cuda
 
 # install nvidia-compatible docker
-echo -e "${RED}Please DO NOT abort the script. Doing so will result in an incomplete setup."
+echo -e "${RED}Please DO NOT abort the script. Doing so will result in an incomplete setup.${NC}"
 
 curl https://get.docker.com | sh
 distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
@@ -47,8 +47,8 @@ cat /etc/docker/daemon.json | jq 'del(."default-runtime") + {"default-runtime": 
 sudo usermod -a -G docker $(id -un)
 
 # install and configure aws-deepracer-community
-echo -e "${NOCOL}Installing prerequisites."
-echo -e "${GREEN}Please enter 'y' when prompted."
+echo -e "Installing prerequisites."
+echo -e "${GREEN}Please enter 'y' when prompted.${NC}"
 git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git
 
 cd deepracer-for-cloud
@@ -60,10 +60,10 @@ sudo service docker restart
 REGION=$(cat system.env | grep -P 'DR_AWS_APP_REGION=([\w\d\-]+)' -o | grep -P '[\w\d\-]+$' -o)
 
 echo -e "${GREEN}Please enter your AWS credentials."
-echo -e "${GREEN}When prompted for default region name and output format, type '${REGION}' and 'json' respectively"
+echo -e "When prompted for default region name and output format, type '${REGION}' and 'json' respectively${NC}"
 aws configure
 
-echo -e "${GREEN}Please enter 'minioadmin' for the first two prompts, leaving the others blank."
+echo -e "${GREEN}Please enter 'minioadmin' for the first two prompts, leaving the others blank.${NC}"
 aws configure --profile minio
 
 cd bin
@@ -73,4 +73,4 @@ sudo service docker start
 docker ps
 
 # inform user about completion
-echo -e "${NOCOL}Setup is done!"
+echo -e "Setup is done!"
