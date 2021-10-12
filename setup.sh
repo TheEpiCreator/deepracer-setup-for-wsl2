@@ -35,6 +35,9 @@ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
 curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
 curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
 sudo apt-get update
+
+echo -e "Installing prerequisites."
+echo -e "${GREEN}Please enter 'y' when prompted.${NC}"
 sudo apt-get install -y nvidia-docker2
 
 sudo service docker stop
@@ -47,15 +50,12 @@ cat /etc/docker/daemon.json | jq 'del(."default-runtime") + {"default-runtime": 
 sudo usermod -a -G docker $(id -un)
 
 # install and configure aws-deepracer-community
-echo -e "Installing prerequisites."
-echo -e "${GREEN}Please enter 'y' when prompted.${NC}"
 git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git
 
 cd deepracer-for-cloud
 sudo bin/init.sh -a gpu -c local
 # configure docker daemon settings
 echo -e "{\n\t\"runtimes\": {\n\t\t\"nvidia\": {\n\t\t\t\"path\": \"nvidia-container-runtime\",\n\t\t\t\"runtimeArgs\": []\n\t\t}\n\t},\n\t\"default-runtime\": \"nvidia\"\n}" | sudo tee /etc/docker/daemon.json
-sudo service docker restart
 
 REGION=$(cat system.env | grep -P 'DR_AWS_APP_REGION=([\w\d\-]+)' -o | grep -P '[\w\d\-]+$' -o)
 
@@ -68,8 +68,6 @@ aws configure --profile minio
 
 cd bin
 source activate.sh
-sudo service docker stop
-sudo service docker start
 docker ps
 
 # inform user about completion
