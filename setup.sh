@@ -14,8 +14,8 @@ GREEN='\033[1;32m'
 
 
 # info
-echo -e "${GREEN}This may take a while..."
-sleep 5s
+echo -e "${GREEN}You may have to enter some data during configuration.\nThis may take a while..."
+sleep 3s
 
 # install appropriate nvidia toolkit(s)
 sudo apt-get update
