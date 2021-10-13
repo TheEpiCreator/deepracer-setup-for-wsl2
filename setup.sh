@@ -69,18 +69,10 @@ aws configure --profile minio
 
 # configure environment
 cd bin
-sudo -s
 source activate.sh
 docker ps
 # create local buckets
 dr-upload-custom-files
-
-# get cuda working
-apt install nvidia-utils-470-server
-sudo apt update
-sudo apt install python3-dev python3-pip python3-venv
-pip install tensorflow
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/extras/CUPTI/lib64
 
 dr-start-training
 
