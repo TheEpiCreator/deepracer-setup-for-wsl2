@@ -17,10 +17,10 @@ GREEN='\033[1;32m'
 echo -e "${GREEN}You may have to enter some data during configuration.\nThis may take a while...${NC}"
 
 # get GPU info
-read -p "Are you running this on WSL2 for win11? (Only answer 'no' if you know what you're doing) [Y/n]: " -n 1 -r haswsl
+read -p "Are you running this on WSL2 for win11? (Only answer 'no' if you know what you're doing) [Y/n]: " -r haswsl
 haswsl = [[ $haswsl =~ ^[Yy]$ ]]
 
-read -p "Is your GPU a 30-series (3070, 3080ti, 3060 super, etc.)? [Y/n]: " -n 1 -r hasnv
+read -p "Is your GPU a 30-series (3070, 3080ti, 3060 super, etc.)? [Y/n]: " -r hasnv
 hasnv = [[ $hasnv =~ ^[Yy]$ ]]
 
 
