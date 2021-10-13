@@ -17,17 +17,21 @@ GREEN='\033[1;32m'
 echo -e "${GREEN}You may have to enter some data during configuration.\nThis may take a while...${NC}"
 
 # get GPU info
+read -p 'Are you running this on WSL2 for win11? [Y/n]: ' haswsl
 read -p 'Is your GPU a 30-series (3070, 3080ti, 3060 super, etc.)? [Y/n]: ' hasnv
 
 # install appropriate nvidia toolkit(s)
-sudo apt-get update
-wget https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/cuda-wsl-ubuntu.pin
-sudo mv cuda-wsl-ubuntu.pin /etc/apt/preferences.d/cuda-repository-pin-600
-wget https://developer.download.nvidia.com/compute/cuda/11.4.0/local_installers/cuda-repo-wsl-ubuntu-11-4-local_11.4.0-1_amd64.deb
-sudo dpkg -i cuda-repo-wsl-ubuntu-11-4-local_11.4.0-1_amd64.deb
-sudo apt-key add /var/cuda-repo-wsl-ubuntu-11-4-local/7fa2af80.pub
-sudo apt-get update
-sudo apt-get -y install cuda
+if [ $haswsl ]
+then
+  sudo apt-get update
+  wget https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/cuda-wsl-ubuntu.pin
+  sudo mv cuda-wsl-ubuntu.pin /etc/apt/preferences.d/cuda-repository-pin-600
+  wget https://developer.download.nvidia.com/compute/cuda/11.4.0/local_installers/cuda-repo-wsl-ubuntu-11-4-local_11.4.0-1_amd64.deb
+  sudo dpkg -i cuda-repo-wsl-ubuntu-11-4-local_11.4.0-1_amd64.deb
+  sudo apt-key add /var/cuda-repo-wsl-ubuntu-11-4-local/7fa2af80.pub
+  sudo apt-get update
+  sudo apt-get -y install cuda
+fi
 
 # install nvidia-compatible docker
 echo -e "${RED}Please DO NOT abort the script. Doing so will result in an incomplete setup.${NC}"
