@@ -57,6 +57,7 @@ sudo bin/init.sh -a gpu -c local
 # configure docker daemon settings
 echo -e "{\n\t\"runtimes\": {\n\t\t\"nvidia\": {\n\t\t\t\"path\": \"nvidia-container-runtime\",\n\t\t\t\"runtimeArgs\": []\n\t\t}\n\t},\n\t\"default-runtime\": \"nvidia\"\n}" | sudo tee /etc/docker/daemon.json
 
+# configure AWS
 REGION=$(cat system.env | grep -P 'DR_AWS_APP_REGION=([\w\d\-]+)' -o | grep -P '[\w\d\-]+$' -o)
 
 echo -e "${GREEN}Please enter your AWS credentials."
@@ -66,9 +67,24 @@ aws configure
 echo -e "${GREEN}Please enter 'minioadmin' for the first two prompts, leaving the others blank.${NC}"
 aws configure --profile minio
 
+# configure environment
 cd bin
+sudo -s
 source activate.sh
 docker ps
+# create local buckets
+dr-upload-custom-files
+
+# get cuda working
+apt install nvidia-utils-470-server
+sudo apt update
+sudo apt install python3-dev python3-pip python3-venv
+pip install tensorflow
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/extras/CUPTI/lib64
+
+dr-start-training
+
+
 
 # inform user about completion
 echo -e "Setup is done!"
