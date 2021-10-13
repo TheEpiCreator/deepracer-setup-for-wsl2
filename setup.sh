@@ -17,7 +17,7 @@ GREEN='\033[1;32m'
 echo -e "${GREEN}You may have to enter some data during configuration.\nThis may take a while...${NC}"
 
 # get GPU info
-read -p 'Are you running this on WSL2 for win11? [Y/n]: ' haswsl
+read -pe 'Are you running this on WSL2 for win11? (Only answer \'no\' if you know what you\'re doing)[Y/n]: ' haswsl
 read -p 'Is your GPU a 30-series (3070, 3080ti, 3060 super, etc.)? [Y/n]: ' hasnv
 
 # install appropriate nvidia toolkit(s)
