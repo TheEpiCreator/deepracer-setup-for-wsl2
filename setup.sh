@@ -98,7 +98,7 @@ dr-upload-custom-files
 
 dr-start-training
 
-
+#TODO: systemctl restart docker
 
 # inform user about completion
 echo -e "Setup is done!"
