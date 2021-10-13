@@ -34,10 +34,14 @@ then
 fi
 
 # install nvidia-compatible docker
-echo -e "${RED}Please DO NOT abort the script. Doing so will result in an incomplete setup.${NC}"
+if [ $haswsl ]
+then
+  echo -e "${RED}Please DO NOT abort the script. Doing so will result in an incomplete setup.${NC}"
+fi
 
 curl https://get.docker.com | sh
 distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+
 if [ $haswsl ]
 then
   curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
