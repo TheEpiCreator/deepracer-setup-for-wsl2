@@ -38,13 +38,16 @@ echo -e "${RED}Please DO NOT abort the script. Doing so will result in an incomp
 
 curl https://get.docker.com | sh
 distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
-curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
-curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
-sudo apt-get update
+if [ $haswsl ]
+then
+  curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+  curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+  sudo apt-get update
 
-echo -e "Installing prerequisites."
-echo -e "${GREEN}Please enter 'y' when prompted.${NC}"
-sudo apt-get install -y nvidia-docker2
+  echo -e "Installing prerequisites."
+  echo -e "${GREEN}Please enter 'y' when prompted.${NC}"
+  sudo apt-get install -y nvidia-docker2
+fi
 
 sudo service docker stop
 sudo service docker start
