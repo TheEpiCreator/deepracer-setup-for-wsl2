@@ -15,7 +15,9 @@ GREEN='\033[1;32m'
 
 # info
 echo -e "${GREEN}You may have to enter some data during configuration.\nThis may take a while...${NC}"
-sleep 3s
+
+# get GPU info
+read -p 'Is your GPU a 30-series (3070, 3080ti, 3060 super, etc.)? [Y/n]: ' hasnv
 
 # install appropriate nvidia toolkit(s)
 sudo apt-get update
@@ -52,6 +54,10 @@ sudo usermod -a -G docker $(id -un)
 # install and configure aws-deepracer-community
 git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git
 
+echo -e "${GREEN}"
+pwd
+echo -e "${NC}"
+
 cd deepracer-for-cloud
 sudo bin/init.sh -a gpu -c local
 # configure docker daemon settings
@@ -67,11 +73,19 @@ aws configure
 echo -e "${GREEN}Please enter 'minioadmin' for the first two prompts, leaving the others blank.${NC}"
 aws configure --profile minio
 
+if [ $hasnv = 'y' ]
+then
+  echo -e "Configuring docker for 30-series GPU..."
+  sed -i 's/WHATEVER=([\d]+.[\d]+.[\d]+)(-[\w-]+)/WHATEVER=$1-gpu-nv/ system.env'
+  echo -e "Installing additional docker images..."
+  docker pull awsdeepracercommunity/deepracer-sagemaker:4.0.0-gpu-nv
+fi
+
 # configure environment
 cd bin
 source activate.sh
 docker ps
-# create local buckets
+dr-update
 dr-upload-custom-files
 
 dr-start-training
