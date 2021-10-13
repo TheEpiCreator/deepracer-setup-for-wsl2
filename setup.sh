@@ -83,6 +83,7 @@ aws configure --profile minio
 if [ $hasnv = 'y' ]
 then
   echo -e "Configuring docker for 30-series GPU..."
+  #TODO: replace whatever
   sed -i 's/WHATEVER=([\d]+.[\d]+.[\d]+)(-[\w-]+)/WHATEVER=$1-gpu-nv/ system.env'
   echo -e "Installing additional docker images..."
   docker pull awsdeepracercommunity/deepracer-sagemaker:4.0.0-gpu-nv
