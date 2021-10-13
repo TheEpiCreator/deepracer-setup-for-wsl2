@@ -17,11 +17,11 @@ GREEN='\033[1;32m'
 echo -e "${GREEN}You may have to enter some data during configuration.\nThis may take a while...${NC}"
 
 # get GPU info
-read -p "Are you running this on WSL2 for win11? (Only answer 'no' if you know what you're doing) [Y/n]: " -r haswsl
-haswsl = [[ $haswsl =~ ^[Yy]$ ]]
+read -p "Are you running this on WSL2 for win11? (Only answer 'no' if you know what you're doing) [Y/n]: " -r HASWSLREP
+HASWSL = [[ $HASWSLREP =~ ^[Yy]$ ]]
 
-read -p "Is your GPU a 30-series (3070, 3080ti, 3060 super, etc.)? [Y/n]: " -r hasnv
-hasnv = [[ $hasnv =~ ^[Yy]$ ]]
+read -p "Is your GPU a 30-series (3070, 3080ti, 3060 super, etc.)? [Y/n]: " -r HASNVREP
+HASNV = [[ $HASNVREP =~ ^[Yy]$ ]]
 
 
 # install appropriate nvidia toolkit(s)
@@ -92,7 +92,7 @@ if [ $hasnv = 'y' ]
 then
   echo -e "Configuring docker for 30-series GPU..."
   #TODO: replace whatever
-  sed -i 's/WHATEVER=([\d]+.[\d]+.[\d]+)(-[\w-]+)/WHATEVER=$1-gpu-nv/ system.env'
+  sed -i 's/WHATEVER=([\d]+.[\d]+.[\d]+)(-[\w-]+)/WHATEVER=$1-gpu-nv/' system.env
   echo -e "Installing additional docker images..."
   docker pull awsdeepracercommunity/deepracer-sagemaker:4.0.0-gpu-nv
 fi
