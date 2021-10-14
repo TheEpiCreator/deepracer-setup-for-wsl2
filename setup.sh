@@ -81,7 +81,7 @@ echo "{\n\t\"runtimes\": {\n\t\t\"nvidia\": {\n\t\t\t\"path\": \"nvidia-containe
 # configure AWS
 REGION=$(cat system.env | grep -P 'DR_AWS_APP_REGION=([\w\d\-]+)' -o | grep -P '[\w\d\-]+$' -o)
 
-echo "${GREEN}Please enter your AWS credentials."
+echo "${GREEN}Please enter your AWS credentials. Make sure the user you are registering as has the ability to create and upload to S3 buckets."
 echo "When prompted for default region name and output format, type '${REGION}' and 'json' respectively${NC}"
 aws configure
 
@@ -99,7 +99,7 @@ fi
 
 # configure environment
 cd bin
-source activate.sh
+source ./activate.sh
 docker ps
 dr-update
 dr-upload-custom-files
