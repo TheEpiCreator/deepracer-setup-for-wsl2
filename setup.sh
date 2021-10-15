@@ -18,26 +18,24 @@ GREEN='\033[1;32m'
 echo -e "${GREEN}You may have to enter some data during configuration.\nThis may take a while...${NC}"
 
 # get GPU info
-read -p "Are you running this on WSL2 for win11? (Only answer 'no' if you know what you're doing) [Y/n]: " -n 1 -r HASWSLREP
-case "$HASWSLREP" in 
-  y|Y ) HASWSL=1;;
-  n|N ) HASWSL=0;;
-  * ) HASWSL=1
+read -p "Are you running this on WSL2 for win11? (Only answer 'no' if you know what you're doing) [Y/n]: " -n 1 -r wsl_response
+case "$wsl_response" in 
+  y|Y ) has_wsl=1;;
+  n|N ) has_wsl=0;;
+  * ) has_wsl=1
   echo "Invalid response, defaulting to 'no'.";;
 esac
-echo -e "${HASWSL}"
 
-read -p "Is your GPU a 30-series (3070, 3080ti, 3060 super, etc.)? [Y/n]: " -n 1 -r HASNVREP
-case "$HASNVREP" in 
-  y|Y ) HASNV=1;;
-  n|N ) HASNV=0;;
-  * ) HASNV=0
+read -p "Is your GPU a 30-series (3070, 3080ti, 3060 super, etc.)? [Y/n]: " -n 1 -r thirtyseries_response
+case "$thirtyseries_response" in 
+  y|Y ) has_thirtyseries=1;;
+  n|N ) has_thirtyseries=0;;
+  * ) has_thirtyseries=0
   echo "Invalid response, defaulting to 'no'.";;
 esac
-echo -e "${HASWSL}"
 
 # install appropriate nvidia toolkit(s)
-if [ $HASWSL ]
+if [ $has_wsl ]
 then
   sudo apt-get update
   wget https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/cuda-wsl-ubuntu.pin
@@ -50,7 +48,7 @@ then
 fi
 
 # install nvidia-compatible docker
-if [ $HASWSL ]
+if [ $has_wsl ]
 then
   echo -e "${RED}Please DO NOT abort the script. Doing so will result in an incomplete setup.${NC}"
 fi
@@ -58,7 +56,7 @@ fi
 curl https://get.docker.com | sh
 distribution=$(. /etc/os-release;echo -e $ID$VERSION_ID)
 
-if [ $HASWSL ]
+if [ $has_wsl ]
 then
   curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
   curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
@@ -100,7 +98,7 @@ aws configure
 echo -e "${GREEN}Please enter 'minioadmin' for the first two prompts, leaving the others blank.${NC}"
 aws configure --profile minio
 
-if [ $HASNV ]
+if [ $has_thirtyseries ]
 then
   echo -e "Configuring docker for 30-series GPU..."
   #TODO: replace whatever
