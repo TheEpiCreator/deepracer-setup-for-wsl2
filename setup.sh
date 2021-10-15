@@ -19,19 +19,21 @@ echo -e "${GREEN}You may have to enter some data during configuration.\nThis may
 
 # get GPU info
 read -p "Are you running this on WSL2 for win11? (Only answer 'no' if you know what you're doing) [Y/n]: " -n 1 -r HASWSLREP
-HASWSL=0
-if [ $HASWSLREP =~ ^[Yy]$ ]
-then
-  HASWSL=1
-fi
+case "$HASWSLREP" in 
+  y|Y ) HASWSL=1;;
+  n|N ) HASWSL=0;;
+  * ) HASWSL=1
+  echo "Invalid response, defaulting to 'no'.";;
+esac
 echo -e "${HASWSL}"
 
 read -p "Is your GPU a 30-series (3070, 3080ti, 3060 super, etc.)? [Y/n]: " -n 1 -r HASNVREP
-HASNV=0
-if [ $HASNVREP =~ ^[Yy]$ ]
-then
-  HASNV=1
-fi
+case "$HASNVREP" in 
+  y|Y ) HASNV=1;;
+  n|N ) HASNV=0;;
+  * ) HASNV=0
+  echo "Invalid response, defaulting to 'no'.";;
+esac
 echo -e "${HASWSL}"
 
 # install appropriate nvidia toolkit(s)
