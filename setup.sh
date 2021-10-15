@@ -71,7 +71,7 @@ sudo service docker start
 
 # install and configure prerequisites for aws-deepracer-community
   echo -e "${GREEN}Please enter 'y' when prompted.${NC}"
-sudo apt-get install jq awscli python3-boto3 docker-compose
+sudo apt-get install jq awscli python3-boto3 docker-compose net-tools
 
 cat /etc/docker/daemon.json | jq 'del(."default-runtime") + {"default-runtime": "nvidia"}' | sudo tee /etc/docker/daemon.json
 sudo usermod -a -G docker $(id -un)
@@ -110,10 +110,13 @@ fi
 # configure environment
 cd bin
 source ./activate.sh
+# give time for docker to run
+sleep 2s
 docker ps
 dr-update
 dr-upload-custom-files
-
+sleep 2s
+ifconfig
 dr-start-training
 
 #TODO: systemctl restart docker
