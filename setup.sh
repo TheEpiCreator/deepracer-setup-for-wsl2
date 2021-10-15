@@ -101,13 +101,19 @@ aws configure --profile minio
 if [ $has_thirtyseries ]
 then
   echo -e "Configuring docker for 30-series GPU..."
-  #TODO: replace whatever
   sed -i 's/DR_SAGEMAKER_IMAGE=4\.0\.0-gpu/DR_SAGEMAKER_IMAGE=4.0.0-gpu-nv/' system.env
   echo -e "Installing additional docker images..."
   docker pull awsdeepracercommunity/deepracer-sagemaker:4.0.0-gpu-nv
 fi
 
 # configure environment
+docker volume create portainer_data
+docker run -d -p 9443:9443 --name portainer \
+  --restart=always \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v portainer_data:/data \
+  portainer/portainer-ce:latest
+
 cd bin
 source ./activate.sh
 # give time for docker to run
@@ -115,11 +121,7 @@ sleep 2s
 docker ps
 dr-update
 dr-upload-custom-files
-sleep 2s
-ifconfig
-dr-start-training
-
-#TODO: systemctl restart docker
 
 # inform user about completion
-echo -e "Setup is done!"
+echo -e "${GREEN}Setup is done! Please run 'source ./deepracer-for-cloud/bin/activate.sh' to enable commands."
+echo -e "You can now connect to localhost:9443 for an interactive GUI interface powered by portainer. Both the username and password are 'minioadmin'.${NOCOL}"
