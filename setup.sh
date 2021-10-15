@@ -12,6 +12,7 @@
 NC='\033[0m'
 RED='\033[0;31m'
 GREEN='\033[1;32m'
+YELLOW='\033[1;33m'
 
 
 # info
@@ -23,7 +24,7 @@ case "$wsl_response" in
   y|Y ) has_wsl=1;;
   n|N ) has_wsl=0;;
   * ) has_wsl=1
-  echo "Invalid response, defaulting to 'no'.";;
+  echo -e "${RED}Invalid response, defaulting to 'yes'.${NC}";;
 esac
 
 read -p "Is your GPU a 30-series (3070, 3080ti, 3060 super, etc.)? [Y/n]: " -n 1 -r thirtyseries_response
@@ -31,13 +32,15 @@ case "$thirtyseries_response" in
   y|Y ) has_thirtyseries=1;;
   n|N ) has_thirtyseries=0;;
   * ) has_thirtyseries=0
-  echo "Invalid response, defaulting to 'no'.";;
+  echo -e "${RED}Invalid response, defaulting to 'no'.${NC}";;
 esac
 
 # install appropriate nvidia toolkit(s)
 if [ $has_wsl ]
 then
+  echo -e "${YELLOW}Updating preinstalled drivers...${NC}"
   sudo apt-get update
+  echo -e "${YELLOW}Installing cuda...${NC}"
   wget https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/cuda-wsl-ubuntu.pin
   sudo mv cuda-wsl-ubuntu.pin /etc/apt/preferences.d/cuda-repository-pin-600
   wget https://developer.download.nvidia.com/compute/cuda/11.4.0/local_installers/cuda-repo-wsl-ubuntu-11-4-local_11.4.0-1_amd64.deb
@@ -48,6 +51,7 @@ then
 fi
 
 # install nvidia-compatible docker
+echo -e "${YELLOW}Installing docker...${NC}"
 if [ $has_wsl ]
 then
   echo -e "${RED}Please DO NOT abort the script. Doing so will result in an incomplete setup.${NC}"
@@ -58,11 +62,10 @@ distribution=$(. /etc/os-release;echo -e $ID$VERSION_ID)
 
 if [ $has_wsl ]
 then
+  echo -e "${YELLOW}Installing Nvidia docker compatibility${NC}"
   curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
   curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
   sudo apt-get update
-
-  echo -e "Installing prerequisites."
   sudo apt-get install -y nvidia-docker2
 fi
 
@@ -70,25 +73,26 @@ sudo service docker stop
 sudo service docker start
 
 # install and configure prerequisites for aws-deepracer-community
-  echo -e "${GREEN}Please enter 'y' when prompted.${NC}"
+echo -e "${YELLOW}Installing other prerequisites and utils...${NC}"
+echo -e "${GREEN}Please enter 'y' when prompted.${NC}"
 sudo apt-get install jq awscli python3-boto3 docker-compose net-tools
 
 cat /etc/docker/daemon.json | jq 'del(."default-runtime") + {"default-runtime": "nvidia"}' | sudo tee /etc/docker/daemon.json
 sudo usermod -a -G docker $(id -un)
 
 # install and configure aws-deepracer-community
+echo -e "${YELLOW}Downloading deepracer-for-cloud...${NC}"
 git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git
 
-echo -e "${GREEN}"
-pwd
-echo -e "${NC}"
-
+echo -e "${YELLOW}Installing deepracer-for-cloud${NC}"
 cd deepracer-for-cloud
 sudo bin/init.sh -a gpu -c local
 # configure docker daemon settings
+echo -e "${YELLOW}Configuring docker...${NC}"
 echo -e "{\n\t\"runtimes\": {\n\t\t\"nvidia\": {\n\t\t\t\"path\": \"nvidia-container-runtime\",\n\t\t\t\"runtimeArgs\": []\n\t\t}\n\t},\n\t\"default-runtime\": \"nvidia\"\n}" | sudo tee /etc/docker/daemon.json
 
 # configure AWS
+echo -e "${YELLOW}Configuring AWS...${NC}"
 REGION=$(cat system.env | grep -P 'DR_AWS_APP_REGION=([\w\d\-]+)' -o | grep -P '[\w\d\-]+$' -o)
 
 echo -e "${GREEN}Please enter your AWS credentials. Make sure the user you are registering as has the ability to create and upload to S3 buckets."
@@ -100,13 +104,14 @@ aws configure --profile minio
 
 if [ $has_thirtyseries ]
 then
-  echo -e "Configuring docker for 30-series GPU..."
+  echo -e "${YELLOW}Configuring docker for 30-series GPU...${NC}"
   sed -i 's/DR_SAGEMAKER_IMAGE=4\.0\.0-gpu/DR_SAGEMAKER_IMAGE=4.0.0-gpu-nv/' system.env
-  echo -e "Installing additional docker images..."
+  echo -e "${YELLOW}Installing additional docker images...${NC}"
   docker pull awsdeepracercommunity/deepracer-sagemaker:4.0.0-gpu-nv
 fi
 
 # configure environment
+echo -e "${YELLOW}Installing portainer...${NC}"
 docker volume create portainer_data
 docker run -d -p 9443:9443 --name portainer \
   --restart=always \
@@ -114,6 +119,7 @@ docker run -d -p 9443:9443 --name portainer \
   -v portainer_data:/data \
   portainer/portainer-ce:latest
 
+echo -e "${YELLOW}Configuring deepracer-for-cloud...${NC}"
 cd bin
 source ./activate.sh
 # give time for docker to run
