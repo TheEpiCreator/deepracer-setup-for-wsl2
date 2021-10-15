@@ -14,7 +14,7 @@ GREEN='\033[1;32m'
 
 
 # info
-echo "${GREEN}You may have to enter some data during configuration.\nThis may take a while...${NC}"
+echo -e "${GREEN}You may have to enter some data during configuration.\nThis may take a while...${NC}"
 
 # get GPU info
 read -p "Are you running this on WSL2 for win11? (Only answer 'no' if you know what you're doing) [Y/n]: " -r HASWSLREP
@@ -23,7 +23,7 @@ if [ $HASWSLREP =~ ^[Yy]$ ]
 then
   HASWSL=1
 fi
-echo "${HASWSL}"
+echo -e "${HASWSL}"
 
 read -p "Is your GPU a 30-series (3070, 3080ti, 3060 super, etc.)? [Y/n]: " -r HASNVREP
 HASNV=0
@@ -31,7 +31,7 @@ if [ $HASNVREP =~ ^[Yy]$ ]
 then
   HASNV=1
 fi
-echo "${HASWSL}"
+echo -e "${HASWSL}"
 
 # install appropriate nvidia toolkit(s)
 if [ $HASWSL ]
@@ -49,11 +49,11 @@ fi
 # install nvidia-compatible docker
 if [ $HASWSL ]
 then
-  echo "${RED}Please DO NOT abort the script. Doing so will result in an incomplete setup.${NC}"
+  echo -e "${RED}Please DO NOT abort the script. Doing so will result in an incomplete setup.${NC}"
 fi
 
 curl https://get.docker.com | sh
-distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+distribution=$(. /etc/os-release;echo -e $ID$VERSION_ID)
 
 if [ $HASWSL ]
 then
@@ -61,8 +61,8 @@ then
   curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
   sudo apt-get update
 
-  echo "Installing prerequisites."
-  echo "${GREEN}Please enter 'y' when prompted.${NC}"
+  echo -e "Installing prerequisites."
+  echo -e "${GREEN}Please enter 'y' when prompted.${NC}"
   sudo apt-get install -y nvidia-docker2
 fi
 
@@ -78,31 +78,31 @@ sudo usermod -a -G docker $(id -un)
 # install and configure aws-deepracer-community
 git clone https://github.com/aws-deepracer-community/deepracer-for-cloud.git
 
-echo "${GREEN}"
+echo -e "${GREEN}"
 pwd
-echo "${NC}"
+echo -e "${NC}"
 
 cd deepracer-for-cloud
 sudo bin/init.sh -a gpu -c local
 # configure docker daemon settings
-echo "{\n\t\"runtimes\": {\n\t\t\"nvidia\": {\n\t\t\t\"path\": \"nvidia-container-runtime\",\n\t\t\t\"runtimeArgs\": []\n\t\t}\n\t},\n\t\"default-runtime\": \"nvidia\"\n}" | sudo tee /etc/docker/daemon.json
+echo -e "{\n\t\"runtimes\": {\n\t\t\"nvidia\": {\n\t\t\t\"path\": \"nvidia-container-runtime\",\n\t\t\t\"runtimeArgs\": []\n\t\t}\n\t},\n\t\"default-runtime\": \"nvidia\"\n}" | sudo tee /etc/docker/daemon.json
 
 # configure AWS
 REGION=$(cat system.env | grep -P 'DR_AWS_APP_REGION=([\w\d\-]+)' -o | grep -P '[\w\d\-]+$' -o)
 
-echo "${GREEN}Please enter your AWS credentials. Make sure the user you are registering as has the ability to create and upload to S3 buckets."
-echo "When prompted for default region name and output format, type '${REGION}' and 'json' respectively${NC}"
+echo -e "${GREEN}Please enter your AWS credentials. Make sure the user you are registering as has the ability to create and upload to S3 buckets."
+echo -e "When prompted for default region name and output format, type '${REGION}' and 'json' respectively${NC}"
 aws configure
 
-echo "${GREEN}Please enter 'minioadmin' for the first two prompts, leaving the others blank.${NC}"
+echo -e "${GREEN}Please enter 'minioadmin' for the first two prompts, leaving the others blank.${NC}"
 aws configure --profile minio
 
 if [ $HASNV ]
 then
-  echo "Configuring docker for 30-series GPU..."
+  echo -e "Configuring docker for 30-series GPU..."
   #TODO: replace whatever
   sed -i 's/DR_SAGEMAKER_IMAGE=4\.0\.0-gpu/DR_SAGEMAKER_IMAGE=4.0.0-gpu-nv/' system.env
-  echo "Installing additional docker images..."
+  echo -e "Installing additional docker images..."
   docker pull awsdeepracercommunity/deepracer-sagemaker:4.0.0-gpu-nv
 fi
 
@@ -118,4 +118,4 @@ dr-start-training
 #TODO: systemctl restart docker
 
 # inform user about completion
-echo "Setup is done!"
+echo -e "Setup is done!"
