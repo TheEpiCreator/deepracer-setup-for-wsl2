@@ -63,7 +63,6 @@ then
   sudo apt-get update
 
   echo -e "Installing prerequisites."
-  echo -e "${GREEN}Please enter 'y' when prompted.${NC}"
   sudo apt-get install -y nvidia-docker2
 fi
 
@@ -71,6 +70,7 @@ sudo service docker stop
 sudo service docker start
 
 # install and configure prerequisites for aws-deepracer-community
+  echo -e "${GREEN}Please enter 'y' when prompted.${NC}"
 sudo apt-get install jq awscli python3-boto3 docker-compose
 
 cat /etc/docker/daemon.json | jq 'del(."default-runtime") + {"default-runtime": "nvidia"}' | sudo tee /etc/docker/daemon.json
