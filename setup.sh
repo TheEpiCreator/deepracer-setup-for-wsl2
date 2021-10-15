@@ -132,4 +132,4 @@ dr-upload-custom-files
 
 # inform user about completion
 echo -e "${GREEN}Setup is done! Please run 'source ./deepracer-for-cloud/bin/activate.sh' to enable commands."
-echo -e "You can now connect to localhost:9443 for an interactive GUI interface powered by portainer. Both the username and password are 'minioadmin'.${NOCOL}"
+echo -e "You can now connect to localhost:9443 for an interactive GUI interface powered by portainer.${NOCOL}"
