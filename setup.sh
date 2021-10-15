@@ -40,7 +40,7 @@ esac
 # install appropriate nvidia toolkit(s)
 if [ $has_wsl ]
 then
-  echo -e "${YELLOW}Updating preinstalled drivers...${NC}"
+  echo -e "${YELLOW}Updating preinstalled utils...${NC}"
   sudo apt-get update
   echo -e "${YELLOW}Installing cuda...${NC}"
   wget https://developer.download.nvidia.com/compute/cuda/repos/wsl-ubuntu/x86_64/cuda-wsl-ubuntu.pin
