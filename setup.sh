@@ -6,6 +6,7 @@
 #>https://aws-deepracer-community.github.io/deepracer-for-cloud/windows.html
 #>https://aws-deepracer-community.github.io/deepracer-for-cloud/installation.html
 #>https://blog.gofynd.com/how-we-broke-into-the-top-1-of-the-aws-deepracer-virtual-circuit-c39a241979f5
+#>https://www.hanselman.com/blog/how-to-ssh-into-wsl2-on-windows-10-from-an-external-machine
 
 
 # define utility variables
@@ -131,5 +132,5 @@ dr-update
 dr-upload-custom-files
 
 # inform user about completion
-echo -e "${GREEN}Setup is done! Please run 'source ./deepracer-for-cloud/bin/activate.sh' to enable commands."
-echo -e "You can now connect to localhost:9443 for an interactive GUI interface powered by portainer.${NOCOL}"
+echo -e "${GREEN}Setup is done! Please run 'sudo -s', then 'source ./deepracer-for-cloud/bin/activate.sh' to enable commands."
+echo -e "You can now connect to localhost:8100 for an interactive GUI interface powered by portainer.${NOCOL}"
