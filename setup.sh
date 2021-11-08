@@ -2,12 +2,11 @@
 # Commands compiled by EPCR
 
 # Some of the commands used can be found at:
-#>https://docs.nvidia.com/cuda/wsl-user-guide/index.html#installing-nvidia-drivers
-#>https://aws-deepracer-community.github.io/deepracer-for-cloud/windows.html
-#>https://aws-deepracer-community.github.io/deepracer-for-cloud/installation.html
-#>https://blog.gofynd.com/how-we-broke-into-the-top-1-of-the-aws-deepracer-virtual-circuit-c39a241979f5
-#>https://www.hanselman.com/blog/how-to-ssh-into-wsl2-on-windows-10-from-an-external-machine
-
+# https://docs.nvidia.com/cuda/wsl-user-guide/index.html#installing-nvidia-drivers
+# https://aws-deepracer-community.github.io/deepracer-for-cloud/windows.html
+# https://aws-deepracer-community.github.io/deepracer-for-cloud/installation.html
+# https://blog.gofynd.com/how-we-broke-into-the-top-1-of-the-aws-deepracer-virtual-circuit-c39a241979f5
+# https://www.hanselman.com/blog/how-to-ssh-into-wsl2-on-windows-10-from-an-external-machine
 
 # define utility variables
 NC='\033[0m'
@@ -15,32 +14,34 @@ RED='\033[0;31m'
 GREEN='\033[1;32m'
 YELLOW='\033[1;33m'
 
-
 # info
 echo -e "${GREEN}You may have to enter some data during configuration.\nThis may take a while...${NC}"
 
 # get GPU info
 read -p "Are you running this on WSL2 for win11? (Only answer 'no' if you know what you're doing) [Y/n]: " -n 1 -r wsl_response
 echo
-case "$wsl_response" in 
-  y|Y ) has_wsl=1;;
-  n|N ) has_wsl=0;;
-  * ) has_wsl=1
-  echo -e "${RED}Invalid response, defaulting to 'yes'.${NC}";;
+case "$wsl_response" in
+y | Y) has_wsl=1 ;;
+n | N) has_wsl=0 ;;
+*)
+  has_wsl=1
+  echo -e "${RED}Invalid response, defaulting to 'yes'.${NC}"
+  ;;
 esac
 
 read -p "Is your GPU a 30-series (3070, 3080ti, 3060 super, etc.)? [Y/n]: " -n 1 -r thirtyseries_response
 echo
-case "$thirtyseries_response" in 
-  y|Y ) has_thirtyseries=1;;
-  n|N ) has_thirtyseries=0;;
-  * ) has_thirtyseries=0
-  echo -e "${RED}Invalid response, defaulting to 'no'.${NC}";;
+case "$thirtyseries_response" in
+y | Y) has_thirtyseries=1 ;;
+n | N) has_thirtyseries=0 ;;
+*)
+  has_thirtyseries=0
+  echo -e "${RED}Invalid response, defaulting to 'no'.${NC}"
+  ;;
 esac
 
 # install appropriate nvidia toolkit(s)
-if [ $has_wsl ]
-then
+if [ $has_wsl ]; then
   echo -e "${YELLOW}Updating preinstalled utils...${NC}"
   sudo apt-get update
   echo -e "${YELLOW}Installing cuda...${NC}"
@@ -55,16 +56,17 @@ fi
 
 # install nvidia-compatible docker
 echo -e "${YELLOW}Installing docker...${NC}"
-if [ $has_wsl ]
-then
+if [ $has_wsl ]; then
   echo -e "${RED}Please DO NOT abort the script. Doing so will result in an incomplete setup.${NC}"
 fi
 
 curl https://get.docker.com | sh
-distribution=$(. /etc/os-release;echo -e $ID$VERSION_ID)
+distribution=$(
+  . /etc/os-release
+  echo -e $ID$VERSION_ID
+)
 
-if [ $has_wsl ]
-then
+if [ $has_wsl ]; then
   echo -e "${YELLOW}Installing Nvidia docker compatibility${NC}"
   curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
   curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
@@ -105,22 +107,23 @@ aws configure
 echo -e "${GREEN}Please enter 'minioadmin' for the first two prompts, leaving the others blank.${NC}"
 aws configure --profile minio
 
-if [ $has_thirtyseries ]
-then
+if [ $has_thirtyseries ]; then
   echo -e "${YELLOW}Configuring docker for 30-series GPU...${NC}"
   sed -i 's/DR_SAGEMAKER_IMAGE=4\.0\.0-gpu/DR_SAGEMAKER_IMAGE=4.0.0-gpu-nv/' system.env
+  sed -i 's/DR_ROBOMAKER_IMAGE=4\.0\.10-cpu-avx2/DR_ROBOMAKER_IMAGE=4.0.10-gpu/' system.env
   echo -e "${YELLOW}Installing additional docker images...${NC}"
   docker pull awsdeepracercommunity/deepracer-sagemaker:4.0.0-gpu-nv
+  docker pull awsdeepracercommunity/deepracer-robomaker:4.0.10-gpu
 fi
 
 # configure environment
 echo -e "${YELLOW}Installing portainer...${NC}"
 docker volume create portainer_data
 docker run -d -p 9443:9443 --name portainer \
-  --restart=always \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  -v portainer_data:/data \
-  portainer/portainer-ce:latest
+--restart=always \
+-v /var/run/docker.sock:/var/run/docker.sock \
+-v portainer_data:/data \
+portainer/portainer-ce:latest
 
 echo -e "${YELLOW}Configuring deepracer-for-cloud...${NC}"
 cd bin
