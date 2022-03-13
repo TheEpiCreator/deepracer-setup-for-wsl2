@@ -8,7 +8,7 @@ This repo has only been tested on a clean installation of Ubuntu 20.04 LTS for w
 ### Prerequisites
 - Nvidia drivers compatible with wsl2
 	- Instructions can be found at https://docs.nvidia.com/cuda/wsl-user-guide/index.html.
-	- Only follow the instructions up to step 2.4, everything else will be done by the program.
+	- Stop after completing step 3, everything else will be done by this program.
 - An AWS account in which to dump training info
 	- The account must have two s3 buckets
 	- One bucket is used during training, one is used for submission
