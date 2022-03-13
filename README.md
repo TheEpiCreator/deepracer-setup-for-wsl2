@@ -14,6 +14,18 @@ This repo has only been tested on a clean installation of Ubuntu 20.04 LTS for w
 	- One bucket is used during training, one is used for submission
 	
 ## Usage
+### Initial Setup
 Execute this in your Ubuntu shell with the ability to use sudo:
 
 	git clone https://github.com/TheEpiCreator/deepracer-setup-for-wsl2 && sudo bash ./deepracer-setup-for-wsl2/setup.sh
+
+### Setup on Startup
+If the WSL interface is restarted, run
+
+	sudo -i
+
+followed by
+	
+	source /home/YOUR-USERNAME-HERE/deepracer-for-cloud/bin/activate.sh
+
+to get everything back up and running.

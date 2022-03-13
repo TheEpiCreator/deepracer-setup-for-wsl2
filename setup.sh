@@ -131,5 +131,5 @@ dr-update
 dr-upload-custom-files
 
 # inform user about completion
-echo -e "${GREEN}Setup is done! Please run 'source ./deepracer-for-cloud/bin/activate.sh' to enable commands."
+echo -e "${GREEN}Setup is done! Please run '${YELLOW}sudo -i${GREEN}' followed by '${YELLOW}source /home/${RED}your-username-here${YELLOW}/deepracer-for-cloud/bin/activate.sh${GREEN}' to enable commands."
 echo -e "You can now connect to localhost:9443 for an interactive GUI interface powered by portainer. Both the username and password are 'minioadmin'.${NOCOL}"
