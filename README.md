@@ -7,10 +7,11 @@ This repo has only been tested on a clean installation of Ubuntu 20.04 LTS for w
 ### Prerequisites
 - Nvidia drivers compatible with wsl2
 	- Instructions can be found at https://docs.nvidia.com/cuda/wsl-user-guide/index.html.
-	- Only follow the instructions up to step 2.4, everything else will be done by the program.
+	- Stop after completing step 3, everything else will be done by this program.
 - An AWS account in which to dump training info
 	
 ## Usage
+### Initial Setup
 Execute this in your Ubuntu shell with the ability to use sudo:
 
 	git clone https://github.com/TheEpiCreator/deepracer-setup-for-wsl2 && sudo bash ./deepracer-setup-for-wsl2/setup.sh
@@ -18,3 +19,13 @@ Execute this in your Ubuntu shell with the ability to use sudo:
 To use the experimental branch:
 
 	git clone https://github.com/TheEpiCreator/deepracer-setup-for-wsl2 && cd ./deepracer-setup-for-wsl2 && git checkout experimental && cd .. && sudo bash ./deepracer-setup-for-wsl2/setup.sh
+### Setup on Startup
+If the WSL interface is restarted, run
+
+	sudo -i
+
+followed by
+	
+	source /home/YOUR-USERNAME-HERE/deepracer-for-cloud/bin/activate.sh
+
+to get everything back up and running.
