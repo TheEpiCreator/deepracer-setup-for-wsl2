@@ -136,4 +136,4 @@ dr-upload-custom-files
 
 # inform user about completion
 echo -e "${GREEN}Setup is done! Please run 'sudo -s', then 'source ./deepracer-for-cloud/bin/activate.sh' to enable commands."
-echo -e "You can now connect to localhost:8100 for an interactive GUI interface powered by portainer.${NOCOL}"
+echo -e "You can now connect to localhost:8000 for an interactive GUI interface powered by portainer.${NOCOL}"
