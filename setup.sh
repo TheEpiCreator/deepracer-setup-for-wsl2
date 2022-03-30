@@ -110,7 +110,7 @@ aws configure --profile minio
 if [ $has_thirtyseries ]; then
   echo -e "${YELLOW}Configuring docker for 30-series GPU...${NC}"
   sed -i 's/DR_SAGEMAKER_IMAGE=4\.0\.0-gpu/DR_SAGEMAKER_IMAGE=4.0.0-gpu-nv/' system.env
-  sed -i 's/DR_ROBOMAKER_IMAGE=4\.0\.10-cpu-avx2/DR_ROBOMAKER_IMAGE=4.0.10-gpu/' system.env
+  sed -i 's/DR_ROBOMAKER_IMAGE=4\.0\.13-cpu-avx2/DR_ROBOMAKER_IMAGE=4.0.10-gpu/' system.env
   echo -e "${YELLOW}Installing additional docker images...${NC}"
   docker pull awsdeepracercommunity/deepracer-sagemaker:4.0.0-gpu-nv
   docker pull awsdeepracercommunity/deepracer-robomaker:4.0.10-gpu
