@@ -28,4 +28,4 @@ followed by
 	
 	source /home/YOUR-USERNAME-HERE/deepracer-for-cloud/bin/activate.sh
 
-to get everything back up and running.
+to get everything back up and running. (Don't worry if you get a "cannot connect" error, just wait a bit and the service will start.)
