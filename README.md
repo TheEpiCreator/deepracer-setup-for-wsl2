@@ -2,13 +2,13 @@
 This repository contains a Linux shell file for easily installing deepracer-for-cloud on Windows Subsystem for Linux 2 (wsl2).
 
 ### Disclaimer
-This repo has only been tested on a clean installation of Ubuntu 20.04 LTS for wsl2 on win11 using an Nvidia GPU and AMD CPU.
+This repo has only been tested on a clean installation of Ubuntu 20.04 LTS for wsl2 on win11 using an Nvidia GPU and AMD/Intel CPU.
 
 ### Prerequisites
 - Nvidia drivers compatible with wsl2
 	- Instructions can be found at https://docs.nvidia.com/cuda/wsl-user-guide/index.html.
 	- Stop after completing step 3, everything else will be done by this program.
-- An AWS account in which to dump training info
+- An access key with the ability to read and write models to/from an S3 bucket
 	
 ## Usage
 ### Initial Setup
